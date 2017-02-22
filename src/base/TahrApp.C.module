@@ -1,0 +1,47 @@
+#include "TahrApp.h"
+#include "Moose.h"
+#include "AppFactory.h"
+#include "MooseSyntax.h"
+
+template<>
+InputParameters validParams<TahrApp>()
+{
+  InputParameters params = validParams<MooseApp>();
+  return params;
+}
+
+TahrApp::TahrApp(InputParameters parameters) :
+    MooseApp(parameters)
+{
+  Moose::registerObjects(_factory);
+  TahrApp::registerObjects(_factory);
+
+  Moose::associateSyntax(_syntax, _action_factory);
+  TahrApp::associateSyntax(_syntax, _action_factory);
+}
+
+TahrApp::~TahrApp()
+{
+}
+
+// External entry point for dynamic application loading
+extern "C" void TahrApp__registerApps() { TahrApp::registerApps(); }
+void
+TahrApp::registerApps()
+{
+  registerApp(TahrApp);
+}
+
+// External entry point for dynamic object registration
+extern "C" void TahrApp__registerObjects(Factory & factory) { TahrApp::registerObjects(factory); }
+void
+TahrApp::registerObjects(Factory & /*factory*/)
+{
+}
+
+// External entry point for dynamic syntax association
+extern "C" void TahrApp__associateSyntax(Syntax & syntax, ActionFactory & action_factory) { TahrApp::associateSyntax(syntax, action_factory); }
+void
+TahrApp::associateSyntax(Syntax & /*syntax*/, ActionFactory & /*action_factory*/)
+{
+}
